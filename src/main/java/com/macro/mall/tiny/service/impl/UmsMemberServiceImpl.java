@@ -1,4 +1,5 @@
 package com.macro.mall.tiny.service.impl;
+
 import com.macro.mall.tiny.common.api.CommonResult;
 import com.macro.mall.tiny.service.RedisService;
 import com.macro.mall.tiny.service.UmsMemberService;
@@ -6,12 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+
 import java.util.Random;
 
 /**
  * 会员管理Service实现类
  * Created by macro on 2018/8/3.
- 2023/6/22 17:44 mall整合Redis实现缓存功能
  */
 @Service
 public class UmsMemberServiceImpl implements UmsMemberService {
@@ -21,6 +22,7 @@ public class UmsMemberServiceImpl implements UmsMemberService {
     private String REDIS_KEY_PREFIX_AUTH_CODE;
     @Value("${redis.key.expire.authCode}")
     private Long AUTH_CODE_EXPIRE_SECONDS;
+
     @Override
     public CommonResult generateAuthCode(String telephone) {
         StringBuilder sb = new StringBuilder();
@@ -33,6 +35,8 @@ public class UmsMemberServiceImpl implements UmsMemberService {
         redisService.expire(REDIS_KEY_PREFIX_AUTH_CODE + telephone, AUTH_CODE_EXPIRE_SECONDS);
         return CommonResult.success(sb.toString(), "获取验证码成功");
     }
+
+
     //对输入的验证码进行校验
     @Override
     public CommonResult verifyAuthCode(String telephone, String authCode) {
@@ -47,4 +51,5 @@ public class UmsMemberServiceImpl implements UmsMemberService {
             return CommonResult.failed("验证码不正确");
         }
     }
+
 }

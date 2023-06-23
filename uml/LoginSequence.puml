@@ -1,0 +1,31 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+Alice -> Bob: Authentication Request
+Bob --> Alice: Authentication Response
+
+Alice -> Bob: Another authentication Request
+Alice <-- Bob: another authentication Response
+@enduml
+
+@startuml
+Actor User as u
+control UmsAdminService as uas
+control UserDetailsService as uds
+control jwtTokenUtil as jwt
+
+autonumber
+u -> uas : username,\n password
+uas -> uds : username
+uds --> uas : userDetails
+note right
+user info &
+permission list
+end note
+uas -> uas : set authentication \nwith userDetails
+uas -> jwt : userDetails
+jwt -> uas : token
+uas -> u : token
+@enduml

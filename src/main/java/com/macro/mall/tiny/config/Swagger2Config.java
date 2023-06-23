@@ -24,19 +24,15 @@ import java.util.List;
 @EnableSwagger2
 public class Swagger2Config {
     @Bean
-    public Docket createRestApi() {
+    public Docket createRestApi(){
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
                 //为当前包下controller生成API文档
                 .apis(RequestHandlerSelectors.basePackage("com.macro.mall.tiny.controller"))
-                //为有@Aapi注解的controller生成PI文档
-                // .apis(RequestHandlerSelectors.withClassAnnotation(Api.class))
-                //为有@ApiOperation注解的方法生成API文档
-                // .apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
                 .paths(PathSelectors.any())
                 .build()
-                // 添加登录认证
+                //添加登录认证
                 .securitySchemes(securitySchemes())
                 .securityContexts(securityContexts());
     }
@@ -51,22 +47,21 @@ public class Swagger2Config {
     }
 
     private List<ApiKey> securitySchemes() {
-        // 设置请求头信息
+        //设置请求头信息
         List<ApiKey> result = new ArrayList<>();
-        ApiKey apiKey = new ApiKey("Authorization",
-                "Authorization", "header");
+        ApiKey apiKey = new ApiKey("Authorization", "Authorization", "header");
         result.add(apiKey);
         return result;
     }
 
     private List<SecurityContext> securityContexts() {
-        // 设置需要登录认证的路径
+        //设置需要登录认证的路径
         List<SecurityContext> result = new ArrayList<>();
         result.add(getContextByPath("/brand/.*"));
         return result;
     }
 
-    private SecurityContext getContextByPath(String pathRegex) {
+    private SecurityContext getContextByPath(String pathRegex){
         return SecurityContext.builder()
                 .securityReferences(defaultAuth())
                 .forPaths(PathSelectors.regex(pathRegex))
@@ -75,8 +70,7 @@ public class Swagger2Config {
 
     private List<SecurityReference> defaultAuth() {
         List<SecurityReference> result = new ArrayList<>();
-        AuthorizationScope authorizationScope = new AuthorizationScope(
-                "global", "accessEverything");
+        AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
         AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
         authorizationScopes[0] = authorizationScope;
         result.add(new SecurityReference("Authorization", authorizationScopes));

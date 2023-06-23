@@ -22,8 +22,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import java.util.Date;
 import java.util.List;
+
 /**
  * UmsAdminService实现类
  * Created by macro on 2018/4/26.
@@ -43,6 +45,7 @@ public class UmsAdminServiceImpl implements UmsAdminService {
     private UmsAdminMapper adminMapper;
     @Autowired
     private UmsAdminRoleRelationDao adminRoleRelationDao;
+
     @Override
     public UmsAdmin getAdminByUsername(String username) {
         UmsAdminExample example = new UmsAdminExample();
@@ -53,6 +56,7 @@ public class UmsAdminServiceImpl implements UmsAdminService {
         }
         return null;
     }
+
     @Override
     public UmsAdmin register(UmsAdmin umsAdminParam) {
         UmsAdmin umsAdmin = new UmsAdmin();
@@ -72,6 +76,7 @@ public class UmsAdminServiceImpl implements UmsAdminService {
         adminMapper.insert(umsAdmin);
         return umsAdmin;
     }
+
     @Override
     public String login(String username, String password) {
         String token = null;
@@ -80,9 +85,7 @@ public class UmsAdminServiceImpl implements UmsAdminService {
             if (!passwordEncoder.matches(password, userDetails.getPassword())) {
                 throw new BadCredentialsException("密码不正确");
             }
-            UsernamePasswordAuthenticationToken authentication =
-                    new UsernamePasswordAuthenticationToken(
-                            userDetails, null, userDetails.getAuthorities());
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
             token = jwtTokenUtil.generateToken(userDetails);
         } catch (AuthenticationException e) {
@@ -90,6 +93,8 @@ public class UmsAdminServiceImpl implements UmsAdminService {
         }
         return token;
     }
+
+
     @Override
     public List<UmsPermission> getPermissionList(Long adminId) {
         return adminRoleRelationDao.getPermissionList(adminId);
